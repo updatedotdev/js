@@ -1,5 +1,6 @@
 {
     "name": "@updatedev/js",
+    "license": "MIT",
     "version": "0.0.1",
     "description": "Update JavaScript SDK",
     "main": "dist/main/index.js",
