@@ -1,2 +1,2 @@
-export * from "./cookie";
+export * from "./cookie-defaults";
 export * from "./environment";

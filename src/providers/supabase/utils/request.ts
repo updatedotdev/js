@@ -88,7 +88,7 @@ export class RequestClient {
     queryParams,
     headers: requestHeaders = {},
   }: CoreRequestOptions): Promise<ApiResponse<T>> {
-    let url = `${this.baseUrl}/${endpoint}`;
+    let url = `${this.baseUrl}${endpoint}`;
 
     if (method === "GET" && queryParams) {
       const queryString = this._buildQueryString(queryParams);

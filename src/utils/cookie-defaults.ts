@@ -3,14 +3,6 @@ import { serialize, parse, SerializeOptions } from "cookie";
 
 type CookieOptions = Partial<SerializeOptions>;
 
-export type SetAllCookies = (
-  cookies: {
-    name: string;
-    value: string;
-    options: CookieOptions;
-  }[]
-) => Promise<void> | void;
-
 export function setAll(
   cookies: {
     name: string;

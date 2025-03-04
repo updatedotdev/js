@@ -1,14 +1,8 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Membership } from "../../types/membership";
-import { StorageClient } from "./utils/storage";
 import { ACTIVE_ORGANIZATION_ID_KEY } from "./constants";
 import { RequestClient } from "./utils/request";
 import { MembershipResponse, OrganizationResponse } from "./types/organization";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
-
-type UpdateOrganizationOptions = {
-  automaticallySetOrganization: boolean;
-};
+import { StorageClient } from "../../utils/storage";
 
 export class UpdateOrganizationClient<
   Database = any,

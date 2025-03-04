@@ -7,9 +7,10 @@ import { ACTIVE_ORGANIZATION_ID_KEY } from "./constants";
 import { UpdateBillingClient } from "./UpdateBillingClient";
 import { UpdateOrganizationClient } from "./UpdateOrganizationClient";
 import { UpdateSupabaseAuth } from "./UpdateSupabaseAuth";
-import { UpdateSupabaseClientOptions } from "./types/options";
+import { SupabaseClientOptions } from "@supabase/supabase-js";
 import { RequestClient } from "./utils/request";
-import { createStorageFromOptions, StorageClient } from "./utils/storage";
+import { getAll, setAll } from "../../utils";
+import { StorageClient, StorageOptions } from "../../utils/storage";
 
 export class UpdateSupabaseClient<
   Database = any,
@@ -35,16 +36,23 @@ export class UpdateSupabaseClient<
     protected readonly apiKey: string,
     protected readonly supabaseUrl: string,
     protected readonly supabaseKey: string,
-    options: UpdateSupabaseClientOptions<SchemaName>
+    options?: {
+      supabase?: SupabaseClientOptions<SchemaName>;
+      storage?: StorageOptions;
+    }
   ) {
-    this.supabase = this._initializeSupabase(supabaseUrl, supabaseKey, options);
+    this.supabase = this._initializeSupabase(
+      supabaseUrl,
+      supabaseKey,
+      options?.supabase
+    );
     this.from = this.supabase.from.bind(this.supabase);
     this.rpc = this.supabase.rpc.bind(this.supabase);
     this.storage = this.supabase.storage;
     this.functions = this.supabase.functions;
     this.realtime = this.supabase.realtime;
 
-    this.storageClient = createStorageFromOptions(options.cookies);
+    this.storageClient = this._initializeStorageClient(options?.storage);
 
     const requestClient = new RequestClient({
       baseUrl: "https://api.update.dev/v1",
@@ -61,16 +69,22 @@ export class UpdateSupabaseClient<
     });
   }
 
+  private _initializeStorageClient(storage?: StorageOptions): StorageClient {
+    if (storage != null && storage.getAll != null)
+      return new StorageClient(storage.getAll, storage.setAll);
+    return new StorageClient(getAll, setAll);
+  }
+
   private _initializeSupabase(
     supabaseUrl: string,
     supabaseKey: string,
-    options: UpdateSupabaseClientOptions<SchemaName>
+    options?: SupabaseClientOptions<SchemaName>
   ): SupabaseClient<Database, SchemaName, Schema> {
     return createSupabaseClient<Database, SchemaName, Schema>(
       supabaseUrl,
       supabaseKey,
       {
-        ...options.supabase,
+        ...options,
       }
     );
   }
