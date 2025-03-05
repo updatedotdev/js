@@ -25,7 +25,7 @@ export class UpdateBillingClient {
       method: 'POST',
       body: {
         id,
-        redirectURL,
+        redirect_url: redirectURL,
       },
     });
 
