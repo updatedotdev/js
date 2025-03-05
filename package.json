@@ -21,7 +21,8 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsup",
-    "build:declarations": "tsc -p tsconfig.declarations.json"
+    "build:declarations": "tsc -p tsconfig.declarations.json",
+    "publish:patch": "npm run build && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
