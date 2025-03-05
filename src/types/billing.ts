@@ -19,9 +19,13 @@ export type ProductWithPrices = Product & {
 
 export type Subscription = {
   id: string;
-  status: string;
+  status: 'active' | 'past_due' | 'inactive';
   price: Price;
   product: Product;
+  cancelAtPeriodEnd: boolean;
+  canceledAt: string | null;
+  currentPeriodEnd: string;
+  currentPeriodStart: string;
 };
 
 export type CreateCheckoutSession =
