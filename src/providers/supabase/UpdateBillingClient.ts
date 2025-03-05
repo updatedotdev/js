@@ -16,12 +16,16 @@ export class UpdateBillingClient {
     this.requestClient = requestClient;
   }
 
-  async createCheckoutSession(id: string): Promise<CreateCheckoutSession> {
+  async createCheckoutSession(
+    id: string,
+    redirectURL: string
+  ): Promise<CreateCheckoutSession> {
     const { data, error } = await this.requestClient.request<string>({
-      endpoint: '/billing/checkout',
-      method: 'GET',
-      queryParams: {
+      endpoint: '/billing/checkout/create',
+      method: 'POST',
+      body: {
         id,
+        redirectURL,
       },
     });
 
