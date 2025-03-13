@@ -1,6 +1,6 @@
 {
   "name": "@updatedev/js",
-  "version": "0.0.5-beta",
+  "version": "0.0.6-beta",
   "description": "Update JavaScript SDK",
   "main": "./dist/index.js",
   "files": [
@@ -22,7 +22,6 @@
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsup",
     "build:declarations": "tsc -p tsconfig.declarations.json",
-    "publish:patch": "npm version patch && npm publish",
     "prepublishOnly": "npm run build"
   },
   "repository": {
