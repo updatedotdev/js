@@ -4,6 +4,7 @@ import {
 } from '@supabase/supabase-js/dist/module/lib/types';
 import { UpdateSupabaseClient } from './UpdateSupabaseClient';
 import { StorageOptions } from '../../utils/storage';
+import { UpdateSupabaseClientOptions } from './types/options';
 
 export function createClient<
   Database = any,
@@ -12,12 +13,13 @@ export function createClient<
     : string & keyof Database,
   Schema extends GenericSchema = Database[SchemaName] extends GenericSchema
     ? Database[SchemaName]
-    : any
+    : any,
 >(
   updateApiKey: string,
   supabaseUrl: string,
   supabaseKey: string,
   options?: {
+    update?: UpdateSupabaseClientOptions;
     storage?: StorageOptions;
     supabase?: SupabaseClientOptions<SchemaName>;
   }

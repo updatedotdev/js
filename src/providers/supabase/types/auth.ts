@@ -48,3 +48,7 @@ export type AuthFlowResponse =
       };
       error: AuthError;
     };
+
+export type CreateAuthFlowLinkOptions = {
+  type?: 'sign-in' | 'sign-up';
+};

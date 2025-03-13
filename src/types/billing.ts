@@ -2,8 +2,8 @@ export type Price = {
   id: string;
   currency: string;
   interval: string;
-  unitAmount: number;
-  intervalCount: number;
+  unit_amount: number;
+  interval_count: number;
 };
 
 export type Product = {
@@ -22,10 +22,10 @@ export type Subscription = {
   status: 'active' | 'past_due' | 'inactive';
   price: Price;
   product: Product;
-  cancelAtPeriodEnd: boolean;
-  canceledAt: string | null;
-  currentPeriodEnd: string;
-  currentPeriodStart: string;
+  cancel_at_period_end: boolean;
+  canceled_at: string | null;
+  current_period_end: string;
+  current_period_start: string;
 };
 
 export type CreateCheckoutSession =
@@ -77,7 +77,7 @@ export type ProductResponse =
     };
 
 export type UpdateSubscriptionRequest = {
-  cancelAtPeriodEnd: boolean;
+  cancel_at_period_end: boolean;
 };
 
 export type UpdateSubscriptionResponse = {
@@ -87,4 +87,8 @@ export type UpdateSubscriptionResponse = {
   error: {
     message: string;
   } | null;
+};
+
+export type CreateCheckoutSessionOptions = {
+  redirect_url?: string;
 };

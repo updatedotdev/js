@@ -11,6 +11,7 @@ import { SupabaseClientOptions } from '@supabase/supabase-js';
 import { RequestClient } from '../../utils/request';
 import { getAll, setAll } from '../../utils';
 import { StorageClient, StorageOptions } from '../../utils/storage';
+import { UpdateSupabaseClientOptions } from './types/options';
 
 export class UpdateSupabaseClient<
   Database = any,
@@ -37,6 +38,7 @@ export class UpdateSupabaseClient<
     protected readonly supabaseUrl: string,
     protected readonly supabaseKey: string,
     options?: {
+      update?: UpdateSupabaseClientOptions;
       supabase?: SupabaseClientOptions<SchemaName>;
       storage?: StorageOptions;
     }
@@ -55,7 +57,7 @@ export class UpdateSupabaseClient<
     this.storageClient = this._initializeStorageClient(options?.storage);
 
     const requestClient = new RequestClient({
-      baseUrl: 'https://api.update.dev/v1',
+      baseUrl: options?.update?.baseUrl ?? 'https://api.update.dev/v1',
       apiKey: this.apiKey,
       getActiveOrganizationId: () => this._getActiveOrganizationId(),
       getAuthorizationToken: () => this._getAuthorizationToken(),
