@@ -1,12 +1,14 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { RequestClient } from '../../utils/request';
-import { AuthError, AuthFlowResponse, AuthResponse } from './types/auth';
+import {
+  AuthError,
+  AuthFlowResponse,
+  AuthResponse,
+  CreateAuthFlowLinkOptions,
+} from './types/auth';
 import { GoTrueClient } from '@supabase/auth-js';
 
-export interface UpdateSupabaseAuth extends GoTrueClient {
-  createAuthFlowLink(): Promise<AuthFlowResponse>;
-  handleAuthCallback(code: string): Promise<AuthResponse>;
-}
+export interface UpdateSupabaseAuth extends GoTrueClient {}
 
 export class UpdateSupabaseAuth {
   constructor(
@@ -28,10 +30,13 @@ export class UpdateSupabaseAuth {
   /**
    * Creates a new auth flow link
    */
-  async createAuthFlowLink(): Promise<AuthFlowResponse> {
+  async createAuthFlowLink(
+    options?: CreateAuthFlowLinkOptions
+  ): Promise<AuthFlowResponse> {
     const { data, error } = await this.requestClient.request<{ url: string }>({
       endpoint: '/auth/flow/create',
       method: 'GET',
+      queryParams: options,
     });
 
     if (error) {
@@ -52,7 +57,10 @@ export class UpdateSupabaseAuth {
    */
   async handleAuthCallback(code: string): Promise<AuthResponse> {
     const { data: codeVerificationData, error: codeVerificationError } =
-      await this.requestClient.request({
+      await this.requestClient.request<{
+        access_token: string;
+        refresh_token: string;
+      }>({
         endpoint: '/auth/flow/verify',
         method: 'POST',
         body: {

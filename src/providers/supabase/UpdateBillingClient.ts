@@ -7,6 +7,7 @@ import {
   ProductWithPrices,
   UpdateSubscriptionRequest,
   UpdateSubscriptionResponse,
+  CreateCheckoutSessionOptions,
 } from '../../types/billing';
 
 export class UpdateBillingClient {
@@ -18,14 +19,14 @@ export class UpdateBillingClient {
 
   async createCheckoutSession(
     id: string,
-    redirectURL: string
+    options?: CreateCheckoutSessionOptions
   ): Promise<CreateCheckoutSession> {
     const { data, error } = await this.requestClient.request<string>({
       endpoint: '/billing/checkout/create',
       method: 'POST',
       body: {
         id,
-        redirect_url: redirectURL,
+        options,
       },
     });
 
@@ -102,14 +103,14 @@ export class UpdateBillingClient {
 
   async updateSubscription(
     id: string,
-    { cancelAtPeriodEnd }: UpdateSubscriptionRequest
+    { cancel_at_period_end }: UpdateSubscriptionRequest
   ): Promise<UpdateSubscriptionResponse> {
     const { data, error } = await this.requestClient.request<Subscription>({
       endpoint: '/billing/subscriptions/update',
       method: 'POST',
       body: {
         id,
-        cancelAtPeriodEnd,
+        cancel_at_period_end,
       },
     });
 

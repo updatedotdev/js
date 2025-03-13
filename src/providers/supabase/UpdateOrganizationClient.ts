@@ -2,6 +2,7 @@ import { RequestClient } from '../../utils/request';
 import { MembershipResponse, OrganizationResponse } from './types/organization';
 import { StorageClient } from '../../utils/storage';
 import { ACTIVE_ORGANIZATION_ID_KEY } from '../../constants';
+import { Membership, Organization } from '../../types';
 
 export class UpdateOrganizationClient {
   private requestClient: RequestClient;
@@ -19,7 +20,7 @@ export class UpdateOrganizationClient {
   }
 
   async createOrganization(name: string): Promise<OrganizationResponse> {
-    const { data, error } = await this.requestClient.request({
+    const { data, error } = await this.requestClient.request<Organization>({
       endpoint: '/organization/create',
       method: 'POST',
       body: { name },
@@ -62,15 +63,14 @@ export class UpdateOrganizationClient {
       };
     }
 
-    const { data: orgData, error: orgError } = await this.requestClient.request(
-      {
+    const { data: orgData, error: orgError } =
+      await this.requestClient.request<Organization>({
         endpoint: '/organization',
         method: 'GET',
         queryParams: {
           organization: activeOrganization,
         },
-      }
-    );
+      });
 
     if (orgError) {
       return {
@@ -93,7 +93,7 @@ export class UpdateOrganizationClient {
   }
 
   async getMemberships(): Promise<MembershipResponse> {
-    const { data, error } = await this.requestClient.request({
+    const { data, error } = await this.requestClient.request<Membership[]>({
       endpoint: '/organization/memberships',
       method: 'GET',
     });

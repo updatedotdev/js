@@ -114,23 +114,15 @@ export class RequestClient {
 
     headers.set('x-api-key', this.apiKey);
 
-    let bodyData: BodyInit | undefined = undefined;
-    if (method === 'POST' && body instanceof FormData) {
-      bodyData = body;
-    } else if (method === 'POST' && body != null) {
-      headers.set('Content-Type', 'application/json');
-      bodyData = JSON.stringify(body);
-    }
-
     const options: RequestInit = {
       method,
       headers,
-      body: bodyData,
     };
 
     if (method === 'POST' && body instanceof FormData) {
       options.body = body;
     } else if (method === 'POST' && body) {
+      headers.set('Content-Type', 'application/json');
       options.body = JSON.stringify(body);
     }
 
@@ -143,7 +135,7 @@ export class RequestClient {
     return { data, error: null, status };
   }
 
-  async request<T = any>(options: RequestOptions): Promise<ApiResponse<T>> {
+  async request<T = unknown>(options: RequestOptions): Promise<ApiResponse<T>> {
     const organizationId = await this.getActiveOrganizationId();
     options = this._addParams(options, { organizationId });
     return this._requestCore(options);
