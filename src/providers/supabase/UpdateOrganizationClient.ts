@@ -94,7 +94,7 @@ export class UpdateOrganizationClient {
 
   async getMemberships(): Promise<MembershipResponse> {
     const { data, error } = await this.requestClient.request<Membership[]>({
-      endpoint: '/organization/memberships',
+      endpoint: '/user/memberships',
       method: 'GET',
     });
 
