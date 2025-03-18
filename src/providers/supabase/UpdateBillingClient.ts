@@ -11,6 +11,8 @@ import {
 } from '../../types/billing';
 import { UpdateClientBillingOptions } from '../../types/options';
 
+const ENVIRONMENT_HEADER = 'X-Update-Billing-Environment';
+
 export class UpdateBillingClient {
   private environment: string;
   private requestClient: RequestClient;
@@ -37,7 +39,7 @@ export class UpdateBillingClient {
         options,
       },
       headers: {
-        'X-Update-Environment': this.environment,
+        [ENVIRONMENT_HEADER]: this.environment,
       },
     });
 
@@ -67,7 +69,7 @@ export class UpdateBillingClient {
       endpoint: '/billing/products',
       method: 'GET',
       headers: {
-        'X-Update-Environment': this.environment,
+        [ENVIRONMENT_HEADER]: this.environment,
       },
     });
 
@@ -95,7 +97,7 @@ export class UpdateBillingClient {
       endpoint: '/billing/subscriptions',
       method: 'GET',
       headers: {
-        'X-Update-Environment': this.environment,
+        [ENVIRONMENT_HEADER]: this.environment,
       },
     });
 
@@ -130,7 +132,7 @@ export class UpdateBillingClient {
         cancel_at_period_end,
       },
       headers: {
-        'X-Update-Environment': this.environment,
+        [ENVIRONMENT_HEADER]: this.environment,
       },
     });
 
