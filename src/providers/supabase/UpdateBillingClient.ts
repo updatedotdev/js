@@ -9,12 +9,20 @@ import {
   UpdateSubscriptionResponse,
   CreateCheckoutSessionOptions,
 } from '../../types/billing';
+import { UpdateClientBillingOptions } from '../../types/options';
 
 export class UpdateBillingClient {
+  private environment: string;
   private requestClient: RequestClient;
 
-  constructor({ requestClient }: { requestClient: RequestClient }) {
+  constructor({
+    environment,
+    requestClient,
+  }: UpdateClientBillingOptions & {
+    requestClient: RequestClient;
+  }) {
     this.requestClient = requestClient;
+    this.environment = environment ?? 'test';
   }
 
   async createCheckoutSession(
@@ -27,6 +35,9 @@ export class UpdateBillingClient {
       body: {
         id,
         options,
+      },
+      headers: {
+        'X-Update-Environment': this.environment,
       },
     });
 
@@ -55,6 +66,9 @@ export class UpdateBillingClient {
     >({
       endpoint: '/billing/products',
       method: 'GET',
+      headers: {
+        'X-Update-Environment': this.environment,
+      },
     });
 
     if (error) {
@@ -80,6 +94,9 @@ export class UpdateBillingClient {
     const { data, error } = await this.requestClient.request<Subscription[]>({
       endpoint: '/billing/subscriptions',
       method: 'GET',
+      headers: {
+        'X-Update-Environment': this.environment,
+      },
     });
 
     if (error) {
@@ -111,6 +128,9 @@ export class UpdateBillingClient {
       body: {
         id,
         cancel_at_period_end,
+      },
+      headers: {
+        'X-Update-Environment': this.environment,
       },
     });
 

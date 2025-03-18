@@ -1,9 +1,5 @@
-import {
-  GenericSchema,
-  SupabaseClientOptions,
-} from '@supabase/supabase-js/dist/module/lib/types';
+import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 import { UpdateSupabaseClient } from './UpdateSupabaseClient';
-import { StorageOptions } from '../../utils/storage';
 import { UpdateSupabaseClientOptions } from './types/options';
 
 export function createClient<
@@ -18,11 +14,7 @@ export function createClient<
   updateApiKey: string,
   supabaseUrl: string,
   supabaseKey: string,
-  options?: {
-    update?: UpdateSupabaseClientOptions;
-    storage?: StorageOptions;
-    supabase?: SupabaseClientOptions<SchemaName>;
-  }
+  options?: UpdateSupabaseClientOptions<SchemaName>
 ): UpdateSupabaseClient<Database, SchemaName, Schema> {
   return new UpdateSupabaseClient<Database, SchemaName, Schema>(
     updateApiKey,
