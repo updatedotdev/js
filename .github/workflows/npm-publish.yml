@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-      - 'feature/**'
-      - 'release/**'
-      - 'hotfix/**'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate-and-publish:
