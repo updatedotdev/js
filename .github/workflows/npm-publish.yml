@@ -1,30 +1,43 @@
-name: Publish to NPM
+name: NPM Package
 
 on:
   push:
     branches:
       - main
+      - 'feature/**'
+      - 'release/**'
+      - 'hotfix/**'
 
 jobs:
-  publish:
+  validate-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
         with:
-          node-version: '18'
+          version: 9.0.0
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build package
-        run: npm run build
+        run: pnpm run build
 
+      - name: Perform dry run publish
+        run: pnpm publish --dry-run
+        
       - name: Publish to NPM
-        run: npm publish
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
