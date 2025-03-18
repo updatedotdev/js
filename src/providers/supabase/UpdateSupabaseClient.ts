@@ -37,11 +37,7 @@ export class UpdateSupabaseClient<
     protected readonly apiKey: string,
     protected readonly supabaseUrl: string,
     protected readonly supabaseKey: string,
-    options?: {
-      update?: UpdateSupabaseClientOptions;
-      supabase?: SupabaseClientOptions<SchemaName>;
-      storage?: StorageOptions;
-    }
+    options?: UpdateSupabaseClientOptions<SchemaName>
   ) {
     this.supabase = this._initializeSupabase(
       supabaseUrl,
@@ -57,14 +53,17 @@ export class UpdateSupabaseClient<
     this.storageClient = this._initializeStorageClient(options?.storage);
 
     const requestClient = new RequestClient({
-      baseUrl: options?.update?.baseUrl ?? 'https://api.update.dev/v1',
+      baseUrl: options?.apiUrl ?? 'https://api.update.dev/v1',
       apiKey: this.apiKey,
       getActiveOrganizationId: () => this._getActiveOrganizationId(),
       getAuthorizationToken: () => this._getAuthorizationToken(),
     });
 
     this.auth = new UpdateSupabaseAuth(this.supabase.auth, requestClient);
-    this.billing = new UpdateBillingClient({ requestClient });
+    this.billing = new UpdateBillingClient({
+      ...options?.billing,
+      requestClient,
+    });
     this.organization = new UpdateOrganizationClient({
       requestClient,
       storageClient: this.storageClient,
