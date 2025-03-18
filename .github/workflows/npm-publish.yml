@@ -34,10 +34,10 @@ jobs:
         run: pnpm run build
 
       - name: Perform dry run publish
-        run: pnpm publish --dry-run
+        run: pnpm publish --dry-run --no-git-checks
         
       - name: Publish to NPM
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-publish]') }}
         run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
