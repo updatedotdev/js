@@ -11,6 +11,7 @@ on:
 jobs:
   validate-and-publish:
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip-publish]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,7 +38,7 @@ jobs:
         run: pnpm publish --dry-run --no-git-checks
         
       - name: Publish to NPM
-        if: ${{ github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-publish]') }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
