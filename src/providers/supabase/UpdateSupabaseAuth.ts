@@ -30,7 +30,7 @@ export class UpdateSupabaseAuth {
   /**
    * Creates a new auth flow link
    */
-  async createConnectLink(
+  async createAuthFlowLink(
     options?: CreateAuthFlowLinkOptions
   ): Promise<AuthFlowResponse> {
     const { data, error } = await this.requestClient.request<{ url: string }>({
@@ -55,7 +55,7 @@ export class UpdateSupabaseAuth {
   /**
    * Verifies the code from the external auth callback
    */
-  async verifyConnectCode(code: string): Promise<AuthResponse> {
+  async verifyAuthFlowCode(code: string): Promise<AuthResponse> {
     const { data: codeVerificationData, error: codeVerificationError } =
       await this.requestClient.request<{
         access_token: string;
