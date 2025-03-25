@@ -12,6 +12,7 @@ import { RequestClient } from '../../utils/request';
 import { getAll, setAll } from '../../utils';
 import { StorageClient, StorageOptions } from '../../utils/storage';
 import { UpdateSupabaseClientOptions } from './types/options';
+import { UpdateEntitlementClient } from './UpdateEntitlementClient';
 
 export class UpdateSupabaseClient<
   Database = any,
@@ -32,6 +33,7 @@ export class UpdateSupabaseClient<
   realtime: SupabaseClient['realtime'];
   billing: UpdateBillingClient;
   organization: UpdateOrganizationClient;
+  entitlements: UpdateEntitlementClient;
 
   constructor(
     protected readonly apiKey: string,
@@ -62,6 +64,10 @@ export class UpdateSupabaseClient<
     this.auth = new UpdateSupabaseAuth(this.supabase.auth, requestClient);
     this.billing = new UpdateBillingClient({
       ...options?.billing,
+      requestClient,
+    });
+    this.entitlements = new UpdateEntitlementClient({
+      environment: options?.billing?.environment,
       requestClient,
     });
     this.organization = new UpdateOrganizationClient({

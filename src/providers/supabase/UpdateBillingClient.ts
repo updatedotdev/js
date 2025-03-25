@@ -10,8 +10,7 @@ import {
   CreateCheckoutSessionOptions,
 } from '../../types/billing';
 import { UpdateClientBillingOptions } from '../../types/options';
-
-const ENVIRONMENT_HEADER = 'X-Update-Billing-Environment';
+import { ENVIRONMENT_HEADER } from '../../types/internal';
 
 export class UpdateBillingClient {
   private environment: string;
