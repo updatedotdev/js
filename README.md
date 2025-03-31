@@ -1,4 +1,4 @@
-# Update.js
+# Update JS Library
 
 Update is a library for seamless billing, authentication, and entitlement management. It extends your existing tools like Supabase and Stripe so you can integrate without migrating away from your existing stack.
 
@@ -16,8 +16,8 @@ For source code examples, check out our [examples repository](https://github.com
 
 ## ✨ Features
 
-- **Authentication**: Easy integration with Supabase auth
-- **Billing**: Seamless subscription and one-time payment management
+- **Authentication**: Easy integration with your auth providers
+- **Billing**: Seamless payments management
 - **Entitlements**: Simple access control for premium features
 - **Framework Support**: Built-in integration for Next.js and other SSR environments
 
@@ -167,7 +167,7 @@ await client.billing.updateSubscription(id, {
 });
 ```
 
-## 🔐 Entitlements
+## 🛡️ Entitlements
 
 ### List Entitlements
 
@@ -200,7 +200,11 @@ const { error } = await client.auth.verifyAuthFlowCode(code);
 
 ## 📚 Documentation
 
-For complete documentation, visit our website.
+For complete documentation, visit [our documentation](https://update.dev/docs).
+
+## 💬 Support
+
+Need help? Join our [Discord community](https://discord.gg/Guege5tXFK) for support and discussions.
 
 ## 🤝 License
 
