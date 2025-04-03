@@ -1,5 +1,6 @@
 export type Price = {
   id: string;
+  type: 'recurring' | 'one-time';
   currency: string;
   interval: string;
   unit_amount: number;
