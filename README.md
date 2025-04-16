@@ -1,13 +1,13 @@
 # Update JS Library
 
-Update is a library for seamless billing, authentication, and entitlement management. It extends your existing tools like Supabase and Stripe so you can integrate without migrating away from your existing stack.
+Update is a library for seamless billing and entitlement management. It integrates with your existing tools, like Stripe and Supabase, so you can integrate without migrating away from your existing stack.
 
 ## 🚀 Quickstart
 
 The easiest way to get started with Update is to use the `create-update-app` command:
 
 ```bash
-npx create-update-app@latest
+npm create update@latest
 ```
 
 This tool will help you choose a framework and set up a fully working Update application in seconds. Just provide a name and your API keys.
@@ -16,7 +16,6 @@ For source code examples, check out our [examples repository](https://github.com
 
 ## ✨ Features
 
-- **Authentication**: Easy integration with your auth providers
 - **Billing**: Seamless payments management
 - **Entitlements**: Simple access control for premium features
 - **Framework Support**: Built-in integration for Next.js and other SSR environments
@@ -27,30 +26,54 @@ For source code examples, check out our [examples repository](https://github.com
 npm install @updatedev/js
 ```
 
-For SSR environments like Next.js:
+## 🔐 Auth Integrations
 
-```bash
-npm install @updatedev/js @updatedev/ssr
-```
+- 🐘 [Supabase](https://supabase.com?utm_source=update&utm_medium=referral&utm_campaign=update-js-readme)
+- 🔥 [Firebase](https://firebase.google.com?utm_source=update&utm_medium=referral&utm_campaign=update-js-readme)
+- 🔐 [Clerk](https://clerk.com?utm_source=update&utm_medium=referral&utm_campaign=update-js-readme)
+- ⚙️ Custom
 
-## 🔑 Initializing
+## 🏁 Getting Started
+
+First, you need to create an account on [Update](https://update.dev) and obtain your publishable key. This key is essential for initializing the Update client in your application. Additionally, configure your preferred authentication provider to manage user sessions and access control.
+
+## ⚙️ Initializing
 
 ### Basic Setup
 
-```javascript
-import { createClient } from "@updatedev/js/supabase";
+```typescript
+import { createClient } from '@updatedev/js';
 
-const update = createClient({
-    process.env.NEXT_PUBLIC_UPDATE_PUBLIC_KEY!,
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-});
+export async function createUpdateClient() {
+  return createClient(process.env.NEXT_PUBLIC_UPDATE_PUBLISHABLE_KEY!, {
+    getSessionToken: async () => {
+      // This must be replaced with your own logic to get your session token
+      // For example, with Supabase:
+      //
+      // import { createSupabaseClient } from '@/utils/supabase/client'
+      // ...
+      // const supabase = createSupabaseClient()
+      // const { data } = await supabase.auth.getSession()
+      // if (data.session == null) return
+      // return data.session.access_token
+
+      // For this example, we'll just return a static token
+      return 'your-session-token';
+    },
+    environment: process.env.NODE_ENV === 'production' ? 'live' : 'test',
+  });
+}
 ```
+
+### Initialization options
+
+- `getSessionToken`: A function that returns a session token for the user. This is optional, but required for most functions that require authentication.
+- `environment`: The environment to use for the client. Valid values are `live` and `test`.
 
 ### Environment Variables (.env.local)
 
 ```
-NEXT_PUBLIC_UPDATE_PUBLIC_KEY=
+NEXT_PUBLIC_UPDATE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
@@ -64,66 +87,51 @@ Update works well with Next.js and other SSR environments. Create a `utils/updat
 #### Client (utils/update/client.ts)
 
 ```typescript
-import { createBrowserClient } from '@updatedev/ssr/supabase';
+import { createClient } from '@updatedev/js';
 
-export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_UPDATE_PUBLIC_KEY!,
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+export async function createUpdateClient() {
+  return createClient(process.env.NEXT_PUBLIC_UPDATE_PUBLISHABLE_KEY!, {
+    getSessionToken: async () => {
+      // This must be replaced with your own logic to get your session token
+      // For example, with Supabase:
+      //
+      // import { createSupabaseClient } from '@/utils/supabase/client'
+      // ...
+      // const supabase = createSupabaseClient()
+      // const { data } = await supabase.auth.getSession()
+      // if (data.session == null) return
+      // return data.session.access_token
+
+      // For this example, we'll just return a static token
+      return 'your-session-token';
+    },
+    environment: process.env.NODE_ENV === 'production' ? 'live' : 'test',
+  });
 }
-```
-
-#### Middleware (middleware.ts in root)
-
-```typescript
-import { type NextRequest } from 'next/server';
-import { updateSession } from '@/utils/update/middleware';
-
-export async function middleware(request: NextRequest) {
-  return await updateSession(request);
-}
-
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
-};
 ```
 
 #### Server (utils/update/server.ts)
 
 ```typescript
-import { createServerClient } from '@updatedev/ssr/supabase';
-import { cookies } from 'next/headers';
+import { createClient } from '@updatedev/js';
 
-export async function createClient() {
-  const cookieStore = await cookies();
+export async function createUpdateClient() {
+  return createClient(process.env.NEXT_PUBLIC_UPDATE_PUBLISHABLE_KEY!, {
+    getSessionToken: async () => {
+      // This must be replaced with your own logic to get your session token
+      // For example, with Supabase:
+      //
+      // import { createSupabaseClient } from '@/utils/supabase/server'
+      // const supabase = await createSupabaseClient()
+      // const { data } = await supabase.auth.getSession()
+      // if (data.session == null) return
+      // return data.session.access_token
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_UPDATE_PUBLIC_KEY!,
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-      },
-    }
-  );
+      // For this example, we'll just return a static token
+      return 'your-session-token';
+    },
+    environment: process.env.NODE_ENV === 'production' ? 'live' : 'test',
+  });
 }
 ```
 
@@ -179,23 +187,6 @@ const { data, error } = await client.entitlements.list();
 
 ```typescript
 const { data, error } = await client.entitlements.check('premium');
-```
-
-## 🔐 Authentication Extensions
-
-### Creating Auth Flow Links
-
-```typescript
-const { data, error } = await client.auth.createAuthFlowLink({
-  type: 'sign-in',
-});
-window.location.href = data.url;
-```
-
-### Verifying Auth Flow Links
-
-```typescript
-const { error } = await client.auth.verifyAuthFlowCode(code);
 ```
 
 ## 📚 Documentation

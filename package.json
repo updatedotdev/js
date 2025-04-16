@@ -1,8 +1,10 @@
 {
   "name": "@updatedev/js",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Update JavaScript SDK",
-  "main": "./dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "homepage": "https://update.dev",
   "bugs": {
     "url": "https://github.com/updatedotdev/js/issues"
@@ -18,18 +20,6 @@
   "files": [
     "dist/**/*"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./supabase": {
-      "types": "./dist/types/providers/supabase/index.d.ts",
-      "import": "./dist/esm/providers/supabase/index.js",
-      "require": "./dist/cjs/providers/supabase/index.js"
-    }
-  },
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsup",
@@ -63,8 +53,6 @@
     "tsup": "^8.4.0"
   },
   "dependencies": {
-    "@supabase/auth-js": "^2.68.0",
-    "@supabase/supabase-js": "^2.49.1",
     "cookie": "^1.0.2"
   }
 }

@@ -1,8 +1,14 @@
-export interface UpdateClientBillingOptions {
-  environment?: 'live' | 'test';
-}
+import { StorageOptions } from '../utils/storage';
+
+export type GetToken = () =>
+  | Promise<string | undefined | null>
+  | string
+  | undefined
+  | null;
 
 export interface UpdateClientOptions {
-  billing?: UpdateClientBillingOptions;
+  getSessionToken?: GetToken;
+  environment?: 'live' | 'test';
   apiUrl?: string;
+  storage?: StorageOptions;
 }
