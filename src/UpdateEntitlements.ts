@@ -1,31 +1,44 @@
-import { RequestClient } from '../../utils/request';
-import { UpdateClientBillingOptions } from '../../types/options';
 import {
   CheckEntitlementResponse,
   ListEntitlementsResponse,
-} from '../../types/entitlement';
-import { ENVIRONMENT_HEADER } from '../../types/internal';
+} from './types/entitlement';
+import { RequestClient } from './utils/request';
 
-export class UpdateEntitlementClient {
-  private environment: string;
+export class UpdateEntitlements {
   private requestClient: RequestClient;
+  private hasSessionToken: boolean;
 
   constructor({
-    environment,
     requestClient,
-  }: UpdateClientBillingOptions & {
+    hasSessionToken,
+  }: {
     requestClient: RequestClient;
+    hasSessionToken: boolean;
   }) {
     this.requestClient = requestClient;
-    this.environment = environment ?? 'test';
+    this.hasSessionToken = hasSessionToken;
   }
 
   async list(): Promise<ListEntitlementsResponse> {
+    if (!this.hasSessionToken) {
+      console.warn(
+        '@updatedev/js: entitlements.list() called without a session token. You need to add `getSessionToken` to createClient().'
+      );
+      return {
+        data: {
+          entitlements: null,
+        },
+        error: {
+          message: 'No session token',
+        },
+      };
+    }
+
     const { data, error } = await this.requestClient.request<string[]>({
       endpoint: '/entitlements',
       method: 'GET',
-      headers: {
-        [ENVIRONMENT_HEADER]: this.environment,
+      extra: {
+        includeUser: true,
       },
     });
 
@@ -49,6 +62,18 @@ export class UpdateEntitlementClient {
   }
 
   async check(entitlement: string): Promise<CheckEntitlementResponse> {
+    if (!this.hasSessionToken) {
+      console.warn(
+        '@updatedev/js: entitlements.check() called without a session token. You need to add `getSessionToken` to createClient().'
+      );
+      return {
+        data: null,
+        error: {
+          message: 'No session token',
+        },
+      };
+    }
+
     const { data, error } = await this.requestClient.request<{
       has_access: boolean;
     }>({
@@ -57,8 +82,8 @@ export class UpdateEntitlementClient {
       body: {
         entitlement,
       },
-      headers: {
-        [ENVIRONMENT_HEADER]: this.environment,
+      extra: {
+        includeUser: true,
       },
     });
 
