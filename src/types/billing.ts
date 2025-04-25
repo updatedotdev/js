@@ -91,5 +91,6 @@ export type UpdateSubscriptionResponse = {
 };
 
 export type CreateCheckoutSessionOptions = {
-  redirect_url?: string;
+  redirect_url: string;
+  quantity?: number;
 };
