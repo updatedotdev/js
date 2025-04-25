@@ -145,7 +145,7 @@ export class UpdateBillingClient {
 
   async createCheckoutSession(
     id: string,
-    options?: CreateCheckoutSessionOptions
+    options: CreateCheckoutSessionOptions
   ): Promise<CreateCheckoutSession> {
     if (!this.hasSessionToken) {
       console.warn(
